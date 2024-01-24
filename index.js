@@ -86,8 +86,8 @@ const server = http.createServer((request, response) => {
             }else{
             response.writeHead(200, {'Content-Type':"text/html"});
             response.end(content,'utf-8');
-        }})*/
-    }     
+        }})
+    }*/     
 });
 
 server.listen(3000, () => {
