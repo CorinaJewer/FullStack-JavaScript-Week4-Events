@@ -2,8 +2,12 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const EventEmitter = require ('events');
+const { aboutPage } = require('./routes');
 class MyEmitter extends EventEmitter{};
 const myEmitter = new MyEmitter();
+
+const routes = require('./routes.js');
+
 
 global.DEBUG = true;
 
@@ -28,7 +32,8 @@ const server = http.createServer((request, response) => {
         case '/':
             path += 'index.html';
             myEmitter.emit('route', path);
-            fetchFile(path);
+            //fetchFile(path);
+            routes.aboutPage(path, response);
             break;
 
         case '/home':
@@ -51,7 +56,8 @@ const server = http.createServer((request, response) => {
             //filename = 'about.html';
             
             //fetchFile(fiename);
-            fetchFile(path);
+            //fetchFile(path);
+            routes.aboutPage(path, response);
             break;
 
         case '/contact':
@@ -61,7 +67,8 @@ const server = http.createServer((request, response) => {
             myEmitter.emit('route', path);
             //fetchFile(filename);
             //if(DEBUG) console.log('Path: ',path);
-            fetchFile(path);
+            //fetchFile(path);
+            routes.aboutPage(path,response);
             break;
 
         default:
@@ -70,8 +77,8 @@ const server = http.createServer((request, response) => {
             response.end('404 not found.')
             break;
     }  
-
-    function fetchFile(filename){
+    //This function has been moved to routes.js.,Modularizing code.
+    /*function fetchFile(filename){
         fs.readFile(filename,(error,content)=>{
             if(error){
             response.writeHead(500, {'Content-Type':"text/plain"});
@@ -79,7 +86,7 @@ const server = http.createServer((request, response) => {
             }else{
             response.writeHead(200, {'Content-Type':"text/html"});
             response.end(content,'utf-8');
-        }})
+        }})*/
     }     
 });
 
