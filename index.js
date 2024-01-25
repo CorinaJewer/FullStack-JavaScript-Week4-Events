@@ -1,17 +1,18 @@
 const http = require('http');
-const fs = require('fs');
-const path = require('path');
-const EventEmitter = require ('events');
-const { aboutPage } = require('./routes');
-class MyEmitter extends EventEmitter{};
-const myEmitter = new MyEmitter();
+//const fs = require('fs');
+//const path = require('path');
+//const EventEmitter = require ('events');
+//const { aboutPage } = require('./routes');
+//class MyEmitter extends EventEmitter{};
+//const myEmitter = new MyEmitter();
 
 const routes = require('./routes.js');
+const myEmitter = require('./logEvents.js');
 
 
 global.DEBUG = true;
 
-myEmitter.on('route', (url) =>{
+/*myEmitter.on('route', (url) =>{
     const d = new Date();
     if (DEBUG) console.log (`Route event on ${url} occured on ${d}.`);//logs date and time to console when an event is triggered.
     if(!fs.existsSync(path.join(__dirname, 'logs'))) {
@@ -20,10 +21,17 @@ myEmitter.on('route', (url) =>{
     fs.appendFile(path.join(__dirname, 'logs', 'route.log'), `Route Event on: ${url} at ${d}\n`, (error) => {
     if(error) throw error;
     });
-}) 
+})   //Moved to logEvents.js for moderalizing code.*/
 
 
 const server = http.createServer((request, response) => {
+    if (request.url === '/favicon.ico') {
+        // Ignore favicon.ico requests. Responding with a 204 status code (No Content) and ending the response.
+        response.writeHead(204, {'Content-Type': 'image/x-icon'});
+        response.end();
+        return;   
+      }
+
     if(DEBUG)console.log('Request Url:', request.url);
     //let filename = 'index.html';
     let path = './views/';
@@ -71,13 +79,21 @@ const server = http.createServer((request, response) => {
             routes.aboutPage(path,response);
             break;
 
+        /*case '/event':
+            myEmitter.emit('event', request.url, 'INFO', 'An event route was requested');
+            response.writeHead(200, { 'Content-Type': 'text/plain' });
+            response.end('An event route was requested');
+            break;*/
+
         default:
+            let message = `404 Not Found: ${request.url}`;
             if(DEBUG) console.log('404 not found')
+            myEmitter.emit('error', message);
             response.writeHead(404, {'Content-Type':'text/plain'});
             response.end('404 not found.')
             break;
     }  
-    //This function has been moved to routes.js.,Modularizing code.
+    //This function has been moved to routes.js., Modularizing code.
     /*function fetchFile(filename){
         fs.readFile(filename,(error,content)=>{
             if(error){
