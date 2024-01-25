@@ -1,15 +1,19 @@
 const fs = require('fs');
+const myEmitter = require('./logEvents');
 
 function indexPage(path, response) {
   fetchFile(path, response)
+  myEmitter.emit('route', path);
 }
 
 function aboutPage(path, response) {
   fetchFile(path, response)
+  myEmitter.emit('route', path);
 }
 
 function homePage(path, response) {
   fetchFile(path, response)
+  myEmitter.emit('route', path);
 }
 
 function fetchFile(fileName, response) {

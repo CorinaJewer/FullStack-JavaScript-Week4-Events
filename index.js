@@ -1,27 +1,9 @@
 const http = require('http');
-//const fs = require('fs');
-//const path = require('path');
-//const EventEmitter = require ('events');
-//const { aboutPage } = require('./routes');
-//class MyEmitter extends EventEmitter{};
-//const myEmitter = new MyEmitter();
-
 const routes = require('./routes.js');
 const myEmitter = require('./logEvents.js');
 
 
 global.DEBUG = true;
-
-/*myEmitter.on('route', (url) =>{
-    const d = new Date();
-    if (DEBUG) console.log (`Route event on ${url} occured on ${d}.`);//logs date and time to console when an event is triggered.
-    if(!fs.existsSync(path.join(__dirname, 'logs'))) {
-        fs.mkdirSync(path.join(__dirname, 'logs'));
-      } // if file exists, do nothing. If it doesn't,create it.
-    fs.appendFile(path.join(__dirname, 'logs', 'route.log'), `Route Event on: ${url} at ${d}\n`, (error) => {
-    if(error) throw error;
-    });
-})   //Moved to logEvents.js for moderalizing code.*/
 
 
 const server = http.createServer((request, response) => {
@@ -33,14 +15,12 @@ const server = http.createServer((request, response) => {
       }
 
     if(DEBUG)console.log('Request Url:', request.url);
-    //let filename = 'index.html';
     let path = './views/';
 
     switch (request.url){
         case '/':
             path += 'index.html';
-            myEmitter.emit('route', path);
-            //fetchFile(path);
+            //myEmitter.emit('route', path);  //Moved to routes.js
             routes.aboutPage(path, response);
             break;
 
@@ -59,23 +39,13 @@ const server = http.createServer((request, response) => {
 
         case '/about':
             path += 'about.html';
-            myEmitter.emit('route', path);
-            //response.statusCode = 200
-            //filename = 'about.html';
-            
-            //fetchFile(fiename);
-            //fetchFile(path);
+            //myEmitter.emit('route', path);
             routes.aboutPage(path, response);
             break;
 
         case '/contact':
-            //if(DEBUG) console.log('Contact Route')
-            //filename = 'contact.html';
             path += 'contact.html';
-            myEmitter.emit('route', path);
-            //fetchFile(filename);
-            //if(DEBUG) console.log('Path: ',path);
-            //fetchFile(path);
+            //myEmitter.emit('route', path);
             routes.aboutPage(path,response);
             break;
 
@@ -93,17 +63,7 @@ const server = http.createServer((request, response) => {
             response.end('404 not found.')
             break;
     }  
-    //This function has been moved to routes.js., Modularizing code.
-    /*function fetchFile(filename){
-        fs.readFile(filename,(error,content)=>{
-            if(error){
-            response.writeHead(500, {'Content-Type':"text/plain"});
-            response.end('500 Internal Server Error')
-            }else{
-            response.writeHead(200, {'Content-Type':"text/html"});
-            response.end(content,'utf-8');
-        }})
-    }*/     
+      
 });
 
 server.listen(3000, () => {
