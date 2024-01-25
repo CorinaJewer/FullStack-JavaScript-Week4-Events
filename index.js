@@ -1,5 +1,6 @@
 const http = require('http');
 const routes = require('./routes.js');
+const {indexPage, aboutPage} = require('./routes.js') //import function names directly.
 const myEmitter = require('./logEvents.js');
 
 
@@ -21,7 +22,7 @@ const server = http.createServer((request, response) => {
         case '/':
             path += 'index.html';
             //myEmitter.emit('route', path);  //Moved to routes.js
-            routes.aboutPage(path, response);
+            indexPage(path, response);
             break;
 
         case '/home':
@@ -40,20 +41,24 @@ const server = http.createServer((request, response) => {
         case '/about':
             path += 'about.html';
             //myEmitter.emit('route', path);
-            routes.aboutPage(path, response);
+            aboutPage(path, response);
             break;
 
         case '/contact':
             path += 'contact.html';
             //myEmitter.emit('route', path);
-            routes.aboutPage(path,response);
+            routes.contactPage(path,response);
             break;
 
-        /*case '/event':
+        case '/event':
             myEmitter.emit('event', request.url, 'INFO', 'An event route was requested');
             response.writeHead(200, { 'Content-Type': 'text/plain' });
             response.end('An event route was requested');
-            break;*/
+            break;
+
+        case '/folder':
+            routes.createFolder(request, response);
+            break;
 
         default:
             let message = `404 Not Found: ${request.url}`;
